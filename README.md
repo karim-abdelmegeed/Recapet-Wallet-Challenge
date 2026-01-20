@@ -75,18 +75,6 @@ A Postman collection is included in this repository:
 
 - `Postman/app banking.postman_collection.json`
 
-### How to use
-
-1. Import the collection file into Postman.
-2. Set the Postman collection variables:
-    - `url`: `http://localhost:9000`
-3. Run **Auth -> Login**.
-    - The collection saves the returned token into `accessToken` automatically.
-4. Run wallet requests:
-    - **wallet -> deposit**
-    - **wallet -> withdraw**
-    - **wallet -> transfer**
-
 Notes:
 
 - Wallet endpoints require the `Idempotency-Key` header.
