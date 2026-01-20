@@ -86,8 +86,3 @@ Notes:
 
 - `composer install`
 
-### npm
-
-- `npm run dev`
-- `npm run build`
-
