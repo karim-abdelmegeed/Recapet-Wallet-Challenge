@@ -93,9 +93,3 @@ Notes:
 
 - Wallet endpoints require the `Idempotency-Key` header.
 - Requests use Bearer authentication with `{{accessToken}}`.
-
-## Scripts
-
-### Composer
-
-- `composer install`
