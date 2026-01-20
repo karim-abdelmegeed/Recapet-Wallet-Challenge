@@ -3,9 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
-class BalanceSnapshotRequest extends FormRequest
+class WalletTransferRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +23,9 @@ class BalanceSnapshotRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date' => ['required', 'date']
+            'recipient_user_id' => ['required', 'integer', 'exists:users,id', 'different:' . Auth::id()],
+            'amount' => ['required', 'numeric', 'min:1'],
+
         ];
     }
 }

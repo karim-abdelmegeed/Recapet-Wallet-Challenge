@@ -11,7 +11,6 @@ use App\Models\Wallet;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
 class WalletService
 {
@@ -22,7 +21,7 @@ class WalletService
             DB::beginTransaction();
             $wallet = $user->wallet()->lockForUpdate()->first();
             if (!$wallet) {
-                throw new \InvalidArgumentException('Error wallet not found');
+                throw ValidationException::withMessages(['wallet not found']);
             }
             $existing = Transaction::where('idempotency_key', $idempotencyKey)
                 ->lockForUpdate()
@@ -85,10 +84,10 @@ class WalletService
             }
             $wallet = $user->wallet()->lockForUpdate()->first();
             if (!$wallet) {
-                throw new \InvalidArgumentException('Error wallet not found');
+                throw  ValidationException::withMessages(['Error wallet not found']);
             }
             if ($wallet->balance < $amount) {
-                throw new \InvalidArgumentException('insufficient wallet balance');
+                throw ValidationException::withMessages(['insufficient wallet balance']);
             }
             $transaction =  Transaction::create([
                 'type' => 'withdrawal',
@@ -235,7 +234,9 @@ class WalletService
     private function verifyAmount($amount)
     {
         if ($amount <= 0) {
-            throw new \InvalidArgumentException('Amount must be positive');
+            throw ValidationException::withMessages([
+                'amount' => 'Amount must be positive',
+            ]);
         }
     }
 }

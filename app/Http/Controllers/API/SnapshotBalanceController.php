@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BalanceSnapshotRequest;
 use App\Services\SnapshotBalanceService;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SnapshotBalanceController extends Controller
 {
@@ -17,7 +17,7 @@ class SnapshotBalanceController extends Controller
     public function index(BalanceSnapshotRequest $balanceSnapshotRequest)
     {
         $snapshot = $this->balanceSnapshotService->getSnapshotDetails(
-            $balanceSnapshotRequest->user_id,
+            Auth::id(),
             $balanceSnapshotRequest->date
         );
         return response()->json(['snapshot' => $snapshot], 200);

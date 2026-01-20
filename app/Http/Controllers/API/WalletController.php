@@ -4,8 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WalletDepositRequest;
+use App\Http\Requests\WalletTransferRequest;
 use App\Services\WalletService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
@@ -20,6 +20,9 @@ class WalletController extends Controller
     {
         $data = $walletDepositRequest->validated();
         $idempotencyKey = $walletDepositRequest->header('Idempotency-Key');
+        if (!$idempotencyKey) {
+            return response()->json(['message' => 'Idempotency-Key header is required'], 400);
+        }
         $transaction = $this->walletService->deposit(Auth::user(), $data['amount'] * 100, $idempotencyKey);
         return response()->json(['transaction' => $transaction], 200);
     }
@@ -27,16 +30,15 @@ class WalletController extends Controller
     {
         $data = $walletDepositRequest->validated();
         $idempotencyKey = $walletDepositRequest->header('Idempotency-Key');
+        if (!$idempotencyKey) {
+            return response()->json(['message' => 'Idempotency-Key header is required'], 400);
+        }
         $transaction = $this->walletService->withdraw(Auth::user(), $data['amount'] * 100, $idempotencyKey);
         return response()->json(['transaction' => $transaction], 200);
     }
-    public function transfer(Request $request)
+    public function transfer(WalletTransferRequest $request)
     {
-        $data = $request->validate([
-            'recipient_user_id' => ['required', 'integer', 'exists:users,id', 'different:' . Auth::id()],
-            'amount' => ['required', 'numeric', 'min:1'],
-        ]);
-
+        $data = $request->validated();
         $idempotencyKey = $request->header('Idempotency-Key');
         if (!$idempotencyKey) {
             return response()->json(['message' => 'Idempotency-Key header is required'], 400);
