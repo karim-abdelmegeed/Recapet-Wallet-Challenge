@@ -65,6 +65,11 @@ npm run build
 - App (Nginx): `http://localhost:9000`
 - phpMyAdmin: `http://localhost:8080`
 
+## Testing User
+
+- email: `test@gmail.com`
+- password: `123456`
+
 ## Key Pages (Web)
 
 - **/**: Welcome page (redirects authenticated users to Profile)
