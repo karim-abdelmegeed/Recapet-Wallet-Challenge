@@ -13,6 +13,8 @@ Laravel + Inertia.js (Vue 3) banking demo with wallet operations (deposit / with
 - Docker + Docker Compose
 
 - Node.js + npm
+  .
+- PHP 8.2
 
 ## Installation (Docker Compose)
 
