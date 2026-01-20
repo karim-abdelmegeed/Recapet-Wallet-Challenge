@@ -1,0 +1,99 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: banking-app
+    volumes:
+      - .:/var/www
+      - storage_data:/var/www/storage
+      - cache_data:/var/www/bootstrap/cache
+    user: "www-data"
+    networks:
+      - banking
+
+  nginx:
+    image: nginx:latest
+    container_name: banking-nginx
+    ports:
+      - "9000:80"
+    volumes:
+      - .:/var/www
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - banking
+
+  db:
+    image: mysql:8.0
+    container_name: banking-db
+    environment:
+      MYSQL_DATABASE: banking
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: banking
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3307:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - banking
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: banking-scheduler
+    command: php artisan schedule:work
+    volumes:
+      - .:/var/www
+      - storage_data:/var/www/storage
+      - cache_data:/var/www/bootstrap/cache
+    user: "www-data"
+    depends_on:
+      - app
+      - db
+    networks:
+      - banking
+
+  queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: banking-queue
+    command: php artisan queue:work  --tries=3 --timeout=90
+    restart: always
+    volumes:
+      - .:/var/www
+      - storage_data:/var/www/storage
+      - cache_data:/var/www/bootstrap/cache
+    user: "www-data"
+    depends_on:
+      - app
+      - db
+    networks:
+      - banking
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: banking-phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+    depends_on:
+      - db
+    networks:
+      - banking
+
+networks:
+  banking:
+
+volumes:
+  dbdata:
+  storage_data:
+  cache_data:
