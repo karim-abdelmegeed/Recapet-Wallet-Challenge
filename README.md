@@ -4,7 +4,7 @@ Laravel + Inertia.js (Vue 3) banking demo with wallet operations (deposit / with
 
 ## Tech Stack
 
-- **Backend**: Laravel 12, PHP 8.2+
+- **Backend**: Laravel 12, PHP 8.4+
 - **Auth**: Laravel Fortify + Sanctum
 - **Frontend**: Vue 3 + Inertia.js + Vite
 
@@ -13,8 +13,8 @@ Laravel + Inertia.js (Vue 3) banking demo with wallet operations (deposit / with
 - Docker + Docker Compose
 
 - Node.js + npm
-  .
-- PHP 8.2
+
+- PHP 8.4
 
 ## Installation (Docker Compose)
 
@@ -44,14 +44,20 @@ docker exec -it banking-app composer install
 docker exec -it banking-app php artisan key:generate
 ```
 
-### 4) Run migrations / seed
+### 4) Storage permissions (inside the app container)
+
+```bash
+docker exec -it banking-app sh -lc "chown -R www-data:www-data storage bootstrap/cache && chmod -R 775 storage bootstrap/cache"
+```
+
+### 5) Run migrations / seed
 
 ```bash
 docker exec -it banking-app php artisan migrate
 docker exec -it banking-app php artisan db:seed
 ```
 
-### 5) Frontend assets
+### 6) Frontend assets
 
 You can build assets locally:
 
