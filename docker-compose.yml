@@ -10,7 +10,7 @@ services:
       - .:/var/www
       - storage_data:/var/www/storage
       - cache_data:/var/www/bootstrap/cache
-    user: "www-data"
+    user: "${UID}:${GID}"
     networks:
       - banking
 
@@ -52,7 +52,7 @@ services:
       - .:/var/www
       - storage_data:/var/www/storage
       - cache_data:/var/www/bootstrap/cache
-    user: "www-data"
+    user: "${UID}:${GID}"
     depends_on:
       - app
       - db
@@ -70,7 +70,7 @@ services:
       - .:/var/www
       - storage_data:/var/www/storage
       - cache_data:/var/www/bootstrap/cache
-    user: "www-data"
+    user: "${UID}:${GID}"
     depends_on:
       - app
       - db

@@ -54,6 +54,7 @@ docker exec -it banking-app php artisan db:seed
 You can build assets locally:
 
 ```bash
+npm install
 npm run build
 ```
 
@@ -85,4 +86,3 @@ Notes:
 ### Composer
 
 - `composer install`
-
